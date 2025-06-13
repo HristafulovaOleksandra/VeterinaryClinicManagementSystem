@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryClinic.API", "VeterinaryClinic.API\VeterinaryClinic.API.csproj", "{0CC347AA-6E59-4DD6-83AD-64B41D3E82CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VeterinaryClinic.API", "VeterinaryClinic.API\VeterinaryClinic.API.csproj", "{0CC347AA-6E59-4DD6-83AD-64B41D3E82CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryClinic.BLL", "VeterinaryClinic.BLL\VeterinaryClinic.BLL.csproj", "{5B25E098-C2A9-420B-B938-D52477D8951B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VeterinaryClinic.BLL", "VeterinaryClinic.BLL\VeterinaryClinic.BLL.csproj", "{5B25E098-C2A9-420B-B938-D52477D8951B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryClinic.DAL", "VeterinaryClinic.DAL\VeterinaryClinic.DAL.csproj", "{199CC1D4-06AD-4250-A42C-7393D55BDD22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VeterinaryClinic.DAL", "VeterinaryClinic.DAL\VeterinaryClinic.DAL.csproj", "{199CC1D4-06AD-4250-A42C-7393D55BDD22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
