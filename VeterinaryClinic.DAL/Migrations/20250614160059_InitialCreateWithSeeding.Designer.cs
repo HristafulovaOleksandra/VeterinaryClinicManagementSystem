@@ -12,8 +12,8 @@ using VeterinaryClinic.DAL.Data;
 namespace VeterinaryClinic.DAL.Migrations
 {
     [DbContext(typeof(VeterinaryClinicManagmentContext))]
-    [Migration("20250613233949_AddClinicData")]
-    partial class AddClinicData
+    [Migration("20250614160059_InitialCreateWithSeeding")]
+    partial class InitialCreateWithSeeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

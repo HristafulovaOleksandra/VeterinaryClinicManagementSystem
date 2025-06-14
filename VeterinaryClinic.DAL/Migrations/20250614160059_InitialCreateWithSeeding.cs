@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace VeterinaryClinic.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class AddClinicData : Migration
+    public partial class InitialCreateWithSeeding : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

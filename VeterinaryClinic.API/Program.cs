@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinic.DAL.Data; 
 using Microsoft.Extensions.Logging;
+using VeterinaryClinic.DAL.Repositories.Interfaces;
+using VeterinaryClinic.DAL.UOW;
 
 namespace VeterinaryClinic.API
 {
@@ -11,8 +13,10 @@ namespace VeterinaryClinic.API
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            //Connection for EF database
             builder.Services.AddDbContext<VeterinaryClinicManagmentContext>(options =>
                 options.UseNpgsql(connectionString));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
