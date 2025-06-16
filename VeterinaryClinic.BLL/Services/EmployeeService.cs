@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using VeterinaryClinic.BLL.DTOs.Employee;
 using VeterinaryClinic.BLL.Services.Interfaces;
 using VeterinaryClinic.DAL.Entities;
 using VeterinaryClinic.DAL.UOW;
 using Mapster;
+using VeterinaryClinic.BLL.Exceptions;
 
 namespace VeterinaryClinic.BLL.Services
 {
@@ -51,9 +53,13 @@ namespace VeterinaryClinic.BLL.Services
 
         public async Task DeleteAsync(int id)
         {
-            var employee = await _unitOfWork.Employees.GetByIdAsync(id);
-            if (employee == null)
-                throw new KeyNotFoundException($"Employee with id {id} not found.");
+            var query = await _unitOfWork.AnimalMedicalRecords
+                .FindByCondotion(r => r.EmployeeId == id);
+            if (await query.AnyAsync())
+                throw new ConflictException("Cannot delete employee — they are referenced in medical records.");
+
+            var employee = await _unitOfWork.Employees.GetByIdAsync(id)
+                ?? throw new NotFoundException($"Employee with ID {id} not found.");
 
             await _unitOfWork.Employees.DeleteAsync(employee);
             await _unitOfWork.SaveAsync();

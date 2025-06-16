@@ -5,6 +5,7 @@ using VeterinaryClinic.BLL.Services.Interfaces;
 using VeterinaryClinic.DAL.Entities;
 using VeterinaryClinic.DAL.UOW;
 
+using Microsoft.IdentityModel.SecurityTokenService;
 namespace VeterinaryClinic.BLL.Services
 {
     public class AnimalTypeService : IAnimalTypeService
@@ -18,22 +19,31 @@ namespace VeterinaryClinic.BLL.Services
 
         public async Task<int> CreateAsync(CreateAnimalTypeDto dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.AnimalTypeName))
+                throw new BadRequestException("Animal type name cannot be empty.");
+
             var entity = dto.Adapt<AnimalType>();
             await _unitOfWork.AnimalTypes.AddAsync(entity);
             await _unitOfWork.SaveAsync();
             return entity.Id;
         }
 
+
+
         public async Task UpdateAsync(AnimalTypeDto dto)
         {
-            var entity = await _unitOfWork.AnimalTypes.GetByIdAsync(dto.Id);
-            if (entity == null)
-                throw new NotFoundException($"AnimalType with ID {dto.Id} not found.");
+            if (string.IsNullOrWhiteSpace(dto.AnimalTypeName))
+                throw new BadRequestException("Animal type name cannot be empty.");
+
+            var entity = await _unitOfWork.AnimalTypes.GetByIdAsync(dto.Id)
+                ?? throw new NotFoundException($"AnimalType with ID {dto.Id} not found.");
 
             dto.Adapt(entity);
             await _unitOfWork.AnimalTypes.UpdateAsync(entity);
             await _unitOfWork.SaveAsync();
         }
+
+
 
         public async Task<AnimalTypeDto?> GetByIdAsync(int id)
         {

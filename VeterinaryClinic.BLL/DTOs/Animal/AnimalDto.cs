@@ -12,7 +12,7 @@ namespace VeterinaryClinic.BLL.DTOs.Animal
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public DateTime BirthDate { get; set; }
-        public string? OwnerName { get; set; }
+        public int? OwnerId { get; set; }
         public int AnimalTypeId { get; set; }
     }
 }

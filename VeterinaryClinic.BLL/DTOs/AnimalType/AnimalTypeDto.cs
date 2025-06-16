@@ -9,6 +9,6 @@ namespace VeterinaryClinic.BLL.DTOs.AnimalType
     public class AnimalTypeDto
     {
         public int Id { get; set; }
-        public string AnimalType { get; set; } = string.Empty;
+        public string? AnimalTypeName { get; set; }
     }
 }

@@ -22,19 +22,24 @@ namespace VeterinaryClinic.BLL.Configuration
         public static void RegisterMappings()
         {
             TypeAdapterConfig<CreateAnimalDto, Animal>.NewConfig();
-            TypeAdapterConfig<Animal,AnimalDto>.NewConfig()
-                .Map(dest => dest.OwnerName, src => src.Owner != null ? src.Owner.Name : null)
+            TypeAdapterConfig<Animal, AnimalDto>.NewConfig()
+                .Map(dest => dest.OwnerId, src => src.OwnerId != null ? src.OwnerId : null)
                 .Map(dest => dest.AnimalTypeId, src => src.AnimalType.Id);
 
             TypeAdapterConfig<AnimalDisease, AnimalDiseaseDto>.NewConfig();
             TypeAdapterConfig<CreateAnimalDiseaseDto, AnimalDisease>.NewConfig();
             TypeAdapterConfig<AnimalDiseaseDto, AnimalDisease>.NewConfig();
 
-            TypeAdapterConfig<AnimalMedicalRecord, AnimalMedicalRecordDto>.NewConfig();
+            TypeAdapterConfig<AnimalMedicalRecord, AnimalMedicalRecordDto>.NewConfig()
+                .Map(dest => dest.AnimalId, src => src.AnimalId)
+                .Map(dest => dest.DiseaseId, src => src.DiseaseId != null ? src.DiseaseId : null)
+                .Map(dest => dest.EmployeeId, src => src.EmployeeId != null ? src.EmployeeId : null)
+                .Map(dest => dest.RoomId, src => src.RoomId != null ? src.RoomId : null);
             TypeAdapterConfig<CreateAnimalMedicalRecordDto, AnimalMedicalRecord>.NewConfig();
             TypeAdapterConfig<AnimalMedicalRecordDto, AnimalMedicalRecord>.NewConfig();
 
-            TypeAdapterConfig<AnimalType, AnimalTypeDto>.NewConfig();
+            TypeAdapterConfig<AnimalType, AnimalTypeDto>.NewConfig()
+                .Map(dest => dest.AnimalTypeName, src => src.AnimalTypeName);
             TypeAdapterConfig<CreateAnimalTypeDto, AnimalType>.NewConfig();
             TypeAdapterConfig<AnimalTypeDto, AnimalType>.NewConfig();
 
@@ -50,7 +55,10 @@ namespace VeterinaryClinic.BLL.Configuration
             TypeAdapterConfig<HospitalDepartmentDto, HospitalDepartment>.NewConfig();
             TypeAdapterConfig<CreateHospitalDepartmentDto, HospitalDepartment>.NewConfig();
 
-            TypeAdapterConfig<HospitalRoom, HospitalRoomDto>.NewConfig();
+            TypeAdapterConfig<HospitalRoom, HospitalRoomDto>.NewConfig()
+                .Map(dest => dest.DepartmentId, src => src.DepartmentId != null ? src.DepartmentId : null)
+                .Map(dest => dest.AnimalTypeId, src => src.AnimalTypeId != null ? src.AnimalTypeId : null)
+                .Map(dest => dest.CurrentAnimalId, src => src.CurrentAnimalId != null ? src.CurrentAnimalId : null);
             TypeAdapterConfig<HospitalRoomDto, HospitalRoom>.NewConfig();
             TypeAdapterConfig<CreateHospitalRoomDto, HospitalRoom>.NewConfig();
 

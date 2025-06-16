@@ -8,6 +8,6 @@ namespace VeterinaryClinic.BLL.DTOs.AnimalType
 {
     public class CreateAnimalTypeDto
     {
-        public string AnimalType { get; set; } = string.Empty;
+        public string AnimalTypeName { get; set; } = string.Empty;
     }
 }

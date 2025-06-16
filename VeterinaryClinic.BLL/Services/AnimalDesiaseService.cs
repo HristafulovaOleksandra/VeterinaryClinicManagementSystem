@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using VeterinaryClinic.BLL.DTOs.AnimalDisease;
 using VeterinaryClinic.BLL.Exceptions;
 using VeterinaryClinic.BLL.Services.Interfaces;
@@ -46,6 +47,12 @@ namespace VeterinaryClinic.BLL.Services
 
         public async Task DeleteAsync(int id)
         {
+            var query = await _unitOfWork.AnimalMedicalRecords
+            .FindByCondotion(r => r.DiseaseId == id);
+
+            if (await query.AnyAsync())
+                throw new ConflictException("Cannot delete disease — it is used in medical records.");
+
             var animalDisease = await GetExistingAnimalDiseaseOrThrowAsync(id);
             await _unitOfWork.AnimalDiseases.DeleteAsync(animalDisease);
             await _unitOfWork.SaveAsync();

@@ -2,7 +2,7 @@ using VeterinaryClinic.DAL;
 using VeterinaryClinic.BLL;
 using VeterinaryClinic.DAL.Data;
 using Serilog;
-
+using Mapster;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -13,7 +13,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
 
 builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddBusinessLogic();
-
+builder.Services.AddMapster();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
