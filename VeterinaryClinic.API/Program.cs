@@ -1,54 +1,39 @@
-using Microsoft.EntityFrameworkCore;
-using VeterinaryClinic.DAL.Data; 
-using Microsoft.Extensions.Logging;
-using VeterinaryClinic.DAL.Repositories.Interfaces;
-using VeterinaryClinic.DAL.UOW;
+using VeterinaryClinic.DAL;
+using VeterinaryClinic.BLL;
+using VeterinaryClinic.DAL.Data;
+using Serilog;
 
-namespace VeterinaryClinic.API
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+);
+
+builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddBusinessLogic();
+
+builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddControllers();
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            //Connection for EF database
-            builder.Services.AddDbContext<VeterinaryClinicManagmentContext>(options =>
-                options.UseNpgsql(connectionString));
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<VeterinaryClinicManagmentContext>();
-                    context.Database.Migrate();
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
-                }
-            }
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+    var context = scope.ServiceProvider.GetRequiredService<VeterinaryClinicManagmentContext>();
+    context.Database.EnsureCreated();
 }
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
