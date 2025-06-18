@@ -29,6 +29,8 @@ namespace VeterinaryClinic.BLL
             services.AddScoped<ISortHelper<Employee>, SortHelper<Employee>>();
             services.AddScoped<ISortHelper<Owner>, SortHelper<Owner>>();
             services.AddScoped<ISortHelper<HospitalRoom>, SortHelper<HospitalRoom>>();
+
+
             return services;
         }
     }
