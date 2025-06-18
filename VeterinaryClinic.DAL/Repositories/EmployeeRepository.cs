@@ -11,7 +11,14 @@ namespace VeterinaryClinic.DAL.Repositories
 {
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(VeterinaryClinicManagmentContext context) : base(context) { }
+        public EmployeeRepository(VeterinaryClinicManagmentContext context) : base(context) 
+        {
+            
+        }
+        public IQueryable<Employee> GetAllQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 
 }

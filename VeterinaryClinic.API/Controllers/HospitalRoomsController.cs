@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeterinaryClinic.BLL.DTOs.HospitalRoom;
 using VeterinaryClinic.BLL.Services.Interfaces;
+using VeterinaryClinic.DAL.Entities.HelpModels;
 
 namespace VeterinaryClinic.API.Controllers
 {
@@ -12,8 +13,11 @@ namespace VeterinaryClinic.API.Controllers
         public HospitalRoomsController(IHospitalRoomService service) => _service = service;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HospitalRoomDto>>> GetAll()
-            => Ok(await _service.GetAllAsync());
+        public async Task<IActionResult> GetAll([FromQuery] HospitalRoomParameters parameters)
+        {
+            var result = await _service.GetAllAsync(parameters);
+            return Ok(result);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<HospitalRoomDto>> GetById(int id)

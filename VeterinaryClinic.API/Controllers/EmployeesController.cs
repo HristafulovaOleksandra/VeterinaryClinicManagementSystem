@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeterinaryClinic.BLL.DTOs.Employee;
 using VeterinaryClinic.BLL.Services.Interfaces;
+using VeterinaryClinic.DAL.Entities.HelpModels;
 
 namespace VeterinaryClinic.API.Controllers
 {
@@ -12,8 +13,11 @@ namespace VeterinaryClinic.API.Controllers
         public EmployeesController(IEmployeeService service) => _service = service;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll()
-            => Ok(await _service.GetAllAsync());
+        public async Task<IActionResult> GetAll([FromQuery] EmployeeParameters parameters)
+        {
+            var employees = await _service.GetAllAsync(parameters);
+            return Ok(employees);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<EmployeeDto>> GetById(int id)

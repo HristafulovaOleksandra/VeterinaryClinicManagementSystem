@@ -8,16 +8,19 @@ using VeterinaryClinic.DAL.Entities;
 using VeterinaryClinic.DAL.UOW;
 using Mapster;
 using VeterinaryClinic.BLL.Exceptions;
+using VeterinaryClinic.DAL.Helpers;
+using VeterinaryClinic.DAL.Entities.HelpModels;
 
 namespace VeterinaryClinic.BLL.Services
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public EmployeeService(IUnitOfWork unitOfWork)
+        private readonly ISortHelper<Employee> _sortHelper;
+        public EmployeeService(IUnitOfWork unitOfWork, ISortHelper<Employee> sortHelper)
         {
             _unitOfWork = unitOfWork;
+            _sortHelper = sortHelper;
         }
 
         public async Task<int> CreateAsync(CreateEmployeeDto dto)
@@ -45,10 +48,32 @@ namespace VeterinaryClinic.BLL.Services
             return employee?.Adapt<EmployeeDto>();
         }
 
-        public async Task<IEnumerable<EmployeeDto>> GetAllAsync()
+        public async Task<PagedList<EmployeeDto>> GetAllAsync(EmployeeParameters parameters)
         {
-            var employees = await _unitOfWork.Employees.GetAllAsync();
-            return employees.Adapt<IEnumerable<EmployeeDto>>();
+            var query = _unitOfWork.Employees.GetAllQueryable();
+
+            if (!string.IsNullOrEmpty(parameters.Name))
+                query = query.Where(e => e.Name.Contains(parameters.Name));
+
+            if (!string.IsNullOrEmpty(parameters.PhoneNumber))
+                query = query.Where(e => e.PhoneNumber.Contains(parameters.PhoneNumber));
+
+            if (!string.IsNullOrEmpty(parameters.Address))
+                query = query.Where(e => e.Address.Contains(parameters.Address));
+
+            if (parameters.DepartmentId.HasValue)
+                query = query.Where(e => e.DepartmentId == parameters.DepartmentId.Value);
+
+            if (parameters.SpecialtyId.HasValue)
+                query = query.Where(e => e.SpecialtyId == parameters.SpecialtyId.Value);
+
+            query = _sortHelper.ApplySort(query, parameters.OrderBy);
+
+            var pagedList = await PagedList<Employee>.ToPagedListAsync(query, parameters.PageNumber, parameters.PageSize);
+
+            var dtoList = pagedList.Select(e => e.Adapt<EmployeeDto>()).ToList();
+
+            return new PagedList<EmployeeDto>(dtoList, pagedList.TotalCount, pagedList.CurrentPage, pagedList.PageSize);
         }
 
         public async Task DeleteAsync(int id)

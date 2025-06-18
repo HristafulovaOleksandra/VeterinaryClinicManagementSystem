@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VeterinaryClinic.BLL.DTOs.HospitalRoom;
+using VeterinaryClinic.DAL.Entities.HelpModels;
+using VeterinaryClinic.DAL.Helpers;
 
 namespace VeterinaryClinic.BLL.Services.Interfaces
 {
@@ -12,7 +14,7 @@ namespace VeterinaryClinic.BLL.Services.Interfaces
         Task<int> CreateAsync(CreateHospitalRoomDto dto);
         Task UpdateAsync(HospitalRoomDto dto);
         Task<HospitalRoomDto?> GetByIdAsync(int id);
-        Task<IEnumerable<HospitalRoomDto>> GetAllAsync();
+        Task<PagedList<HospitalRoomDto>> GetAllAsync(HospitalRoomParameters parameters);
         Task DeleteAsync(int id);
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using VeterinaryClinic.BLL.Configuration;
 using VeterinaryClinic.BLL.Services;
 using VeterinaryClinic.BLL.Services.Interfaces;
+using VeterinaryClinic.DAL.Entities;
+using VeterinaryClinic.DAL.Helpers;
 
 namespace VeterinaryClinic.BLL
 {
@@ -22,6 +24,11 @@ namespace VeterinaryClinic.BLL
             services.AddScoped<IHospitalRoomService, HospitalRoomService>();
             services.AddScoped<IOwnerService, OwnerService>();
 
+            services.AddScoped<ISortHelper<Animal>, SortHelper<Animal>>();
+            services.AddScoped<ISortHelper<AnimalMedicalRecord>, SortHelper<AnimalMedicalRecord>>();
+            services.AddScoped<ISortHelper<Employee>, SortHelper<Employee>>();
+            services.AddScoped<ISortHelper<Owner>, SortHelper<Owner>>();
+            services.AddScoped<ISortHelper<HospitalRoom>, SortHelper<HospitalRoom>>();
             return services;
         }
     }

@@ -7,5 +7,9 @@ using VeterinaryClinic.DAL.Entities;
 
 namespace VeterinaryClinic.DAL.Repositories.Interfaces
 {
-    public interface IAnimalMedicalRecordRepository : IGenericRepository<AnimalMedicalRecord> { }
+    public interface IAnimalMedicalRecordRepository : IGenericRepository<AnimalMedicalRecord> 
+    {
+        IQueryable<AnimalMedicalRecord> GetAllQueryable();
+        Task<AnimalMedicalRecord?> GetCompleteEntityAsync(int id);
+    }
 }

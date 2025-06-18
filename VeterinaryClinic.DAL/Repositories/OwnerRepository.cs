@@ -11,6 +11,13 @@ namespace VeterinaryClinic.DAL.Repositories
 {
     public class OwnerRepository : GenericRepository<Owner>, IOwnerRepository
     {
-        public OwnerRepository(VeterinaryClinicManagmentContext context) : base(context) { }
+        public OwnerRepository(VeterinaryClinicManagmentContext context) : base(context) 
+        {
+            
+        }
+        public IQueryable<Owner> GetAllQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 }

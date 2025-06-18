@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeterinaryClinic.BLL.DTOs.Owner;
 using VeterinaryClinic.BLL.Services.Interfaces;
+using VeterinaryClinic.DAL.Entities.HelpModels;
 
 namespace VeterinaryClinic.API.Controllers
 {
@@ -16,9 +17,11 @@ namespace VeterinaryClinic.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OwnerDto>>> GetAll()
-            => Ok(await _service.GetAllAsync());
-
+        public async Task<IActionResult> GetAll([FromQuery] OwnerParameters parameters)
+        {
+            var result = await _service.GetAllAsync(parameters);
+            return Ok(result);
+        }
         [HttpGet("{id:int}")]
         public async Task<ActionResult<OwnerDto>> GetById(int id)
         {

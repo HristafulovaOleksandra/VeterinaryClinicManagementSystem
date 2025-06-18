@@ -26,6 +26,10 @@ namespace VeterinaryClinic.DAL.Repositories
                 .Include(a => a.AnimalType)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
+        public IQueryable<Animal> GetAllQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 
 }

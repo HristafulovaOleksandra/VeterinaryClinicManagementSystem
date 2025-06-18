@@ -7,5 +7,8 @@ using VeterinaryClinic.DAL.Entities;
 
 namespace VeterinaryClinic.DAL.Repositories.Interfaces
 {
-    public interface IEmployeeRepository : IGenericRepository<Employee> { }
+    public interface IEmployeeRepository : IGenericRepository<Employee>
+    {
+        IQueryable<Employee> GetAllQueryable();
+    }
 }

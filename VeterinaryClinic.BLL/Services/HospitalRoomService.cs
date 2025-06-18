@@ -4,6 +4,8 @@ using Mapster;
 using VeterinaryClinic.BLL.DTOs.HospitalRoom;
 using VeterinaryClinic.BLL.Services.Interfaces;
 using VeterinaryClinic.DAL.Entities;
+using VeterinaryClinic.DAL.Entities.HelpModels;
+using VeterinaryClinic.DAL.Helpers;
 using VeterinaryClinic.DAL.UOW;
 
 namespace VeterinaryClinic.BLL.Services
@@ -11,10 +13,12 @@ namespace VeterinaryClinic.BLL.Services
     public class HospitalRoomService : IHospitalRoomService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISortHelper<HospitalRoom> _sortHelper;
 
-        public HospitalRoomService(IUnitOfWork unitOfWork)
+        public HospitalRoomService(IUnitOfWork unitOfWork, ISortHelper<HospitalRoom> sortHelper)
         {
             _unitOfWork = unitOfWork;
+            _sortHelper = sortHelper;
         }
 
         public async Task<int> CreateAsync(CreateHospitalRoomDto dto)
@@ -42,10 +46,28 @@ namespace VeterinaryClinic.BLL.Services
             return entity?.Adapt<HospitalRoomDto>();
         }
 
-        public async Task<IEnumerable<HospitalRoomDto>> GetAllAsync()
+        public async Task<PagedList<HospitalRoomDto>> GetAllAsync(HospitalRoomParameters parameters)
         {
-            var list = await _unitOfWork.HospitalRooms.GetAllAsync();
-            return list.Adapt<IEnumerable<HospitalRoomDto>>();
+            var query = _unitOfWork.HospitalRooms.GetAllQueryable();
+
+            if (!string.IsNullOrWhiteSpace(parameters.RoomNumber))
+                query = query.Where(r => r.RoomNumber.Contains(parameters.RoomNumber));
+
+            if (parameters.DepartmentId.HasValue)
+                query = query.Where(r => r.DepartmentId == parameters.DepartmentId);
+
+            if (parameters.AnimalTypeId.HasValue)
+                query = query.Where(r => r.AnimalTypeId == parameters.AnimalTypeId);
+
+            if (parameters.CurrentAnimalId.HasValue)
+                query = query.Where(r => r.CurrentAnimalId == parameters.CurrentAnimalId);
+
+            query = _sortHelper.ApplySort(query, parameters.OrderBy);
+
+            var pagedList = await PagedList<HospitalRoom>.ToPagedListAsync(query, parameters.PageNumber, parameters.PageSize);
+            var dtoList = pagedList.Select(x => x.Adapt<HospitalRoomDto>()).ToList();
+
+            return new PagedList<HospitalRoomDto>(dtoList, pagedList.TotalCount, pagedList.CurrentPage, pagedList.PageSize);
         }
 
         public async Task DeleteAsync(int id)

@@ -12,6 +12,10 @@ namespace VeterinaryClinic.DAL.Repositories
     public class HospitalRoomRepository : GenericRepository<HospitalRoom>, IHospitalRoomRepository
     {
         public HospitalRoomRepository(VeterinaryClinicManagmentContext context) : base(context) { }
+        public IQueryable<HospitalRoom> GetAllQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 
 }

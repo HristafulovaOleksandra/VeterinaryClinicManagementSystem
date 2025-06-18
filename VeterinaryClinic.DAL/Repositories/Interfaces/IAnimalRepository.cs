@@ -10,5 +10,6 @@ namespace VeterinaryClinic.DAL.Repositories.Interfaces
     public interface IAnimalRepository : IGenericRepository<Animal>
     {
         Task<IEnumerable<Animal>> GetAnimalsByOwnerIdAsync(int ownerId);
+        IQueryable<Animal> GetAllQueryable();
     }
 }
