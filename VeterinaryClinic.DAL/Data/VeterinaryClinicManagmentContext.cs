@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinic.DAL.Entities;
 using VeterinaryClinic.DAL.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace VeterinaryClinic.DAL.Data
 {
-    public partial class VeterinaryClinicManagmentContext : DbContext
+    public partial class VeterinaryClinicManagmentContext : IdentityDbContext<ApplicationUser>
     {
         public VeterinaryClinicManagmentContext()
         {
@@ -28,6 +29,7 @@ namespace VeterinaryClinic.DAL.Data
         public virtual DbSet<HospitalRoom> HospitalRooms { get; set; }
         public virtual DbSet<Owner> Owners { get; set; }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -37,10 +39,14 @@ namespace VeterinaryClinic.DAL.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(VeterinaryClinicManagmentContext).Assembly);
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId);
             InitialSeeder.Seed(modelBuilder);
         }
-
     }
 
 }

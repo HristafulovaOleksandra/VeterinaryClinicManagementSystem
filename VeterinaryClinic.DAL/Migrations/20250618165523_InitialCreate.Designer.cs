@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VeterinaryClinic.DAL.Data;
@@ -11,9 +12,11 @@ using VeterinaryClinic.DAL.Data;
 namespace VeterinaryClinic.DAL.Migrations
 {
     [DbContext(typeof(VeterinaryClinicManagmentContext))]
-    partial class VeterinaryClinicManagmentContextModelSnapshot : ModelSnapshot
+    [Migration("20250618165523_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
