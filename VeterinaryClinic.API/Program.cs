@@ -12,17 +12,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FluentValidation;
 using VeterinaryClinic.DAL;
+using VeterinaryClinicManagementSystem.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var jwtSection = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSection["Key"];
-if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 32)
-{
-    throw new ArgumentException("JWT key must be configured and at least 32 characters long.");
-}
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-
 
 builder.Host.UseSerilog((ctx, services, cfg) =>
     cfg.ReadFrom.Configuration(ctx.Configuration)
@@ -38,22 +31,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<VeterinaryClinicManagmentContext>()
     .AddDefaultTokenProviders();
 
-// 4. JWT аутентифікація
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opts =>
-    {
-        opts.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = jwtSection["Issuer"],
-            ValidateAudience = true,
-            ValidAudience = jwtSection["Audience"],
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = key
-        };
-    });
-
 
 builder.Services.AddAuthorization();
 
@@ -66,13 +43,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAnimalDtoValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
 var app = builder.Build();
-
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
